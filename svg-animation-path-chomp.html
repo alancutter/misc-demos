@@ -1,0 +1,65 @@
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+}
+</style>
+<svg id="svg" width="400" height="400">
+  <path id="target" fill="white"/>
+</svg>
+<script>
+'use strict';
+
+var mouseX = 0;
+var mouseY = 0;
+window.onmousemove = event => {
+  mouseX = event.offsetX;
+  mouseY = event.offsetY;
+};
+
+let createPath = (x, y, curves) => {
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  let lastCurve = curves[curves.length - 1];
+  return `M ${lastCurve[2] * w} ${lastCurve[3] * h} ${curves.map(args => `C ${args[0] * x} ${args[1] * y} ${args[0] * x} ${args[1] * y} ${args[2] * w} ${args[3] * h}`).join(' ')}`;
+}
+
+let inset = 0.4;
+let frame = _ => {
+  target.setAttribute('d', createPath(mouseX, mouseY, [
+    [1, 1, 1 - inset, inset],
+    [1, 1, 1 - inset, 1 - inset],
+    [1, 1, inset, 1 - inset],
+    [1, 1, inset, inset],
+  ]));
+  requestAnimationFrame(frame);
+};
+frame();
+
+var animation = null;
+window.onclick = _ => {
+  if (animation)
+    return;
+  animation = target.animate({
+    offset: 0.5,
+    svgD: createPath(window.innerWidth, window.innerHeight, [
+      [0.5, 0, 1 - inset, inset],
+      [1, 0.5, 1 - inset, 1 - inset],
+      [0.5, 1, inset, 1 - inset],
+      [0, 0.5, inset, inset],
+    ]),
+  }, {
+    duration: 1000,
+    easing: 'ease-in-out',
+    iterations: Infinity,
+  });
+};
+
+let onresize = _ => {
+  svg.setAttribute('width', window.innerWidth);
+  svg.setAttribute('height', window.innerHeight);
+};
+window.onresize = onresize;
+onresize();
+</script>
