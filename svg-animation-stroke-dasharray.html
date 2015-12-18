@@ -15,8 +15,12 @@ svg {
 #text {
   font: 40px "Droid sans";
   position: absolute;
-  left: 330px;
+  width: 400px;
+  height: 50px;
+  left: 300px;
   top: 480px;
+  text-align: center;
+  vertical-align: center;
 }
 .bar {
   background-color: black;
@@ -25,15 +29,31 @@ svg {
   margin-bottom: 10px;
 }
 </style>
-<div id="text">
-  Complete the circle!
-</div>
+<div id="text"></div>
 <svg>
   <circle id="target" r="400" cx="500" cy="500" stroke="black" fill="none" stroke-width="100"></circle>
 </svg>
 <div id="barContainer"></div>
 <script>
+var done = false;
+var total = Math.PI * 2 * 400;
+var progressTexts = [
+  {threshold: 0, text: 'Press buttons.'},
+  {threshold: 300, text: 'Close up the circle.'},
+  {threshold: total * 0.2, text: 'Keep going.'},
+  {threshold: total * 0.5, text: 'Halfway!'},
+  {threshold: total * 0.6, text: 'Go faster!'},
+  {threshold: total * 0.85, text: 'Nearly there!'},
+  {threshold: total * 0.9, text: 'So close!'},
+  {threshold: total * 0.95, text: 'SO CLOSE!'},
+  {threshold: total * 1, text: ''},
+];
+
 onkeydown = e => {
+  if (done) {
+    return;
+  }
+
   var duration = 1000;
 
   target.animate([
@@ -58,4 +78,21 @@ onkeydown = e => {
   };
   barContainer.appendChild(bar);
 };
+
+function check() {
+  var number = Number(/\d+/.exec(getComputedStyle(target).strokeDasharray));
+  for (var progressText of progressTexts) {
+    if (number >= progressText.threshold) {
+      text.textContent = progressText.text;
+    }
+  }
+  if (number >= total) {
+    target.style.stroke = 'lime';
+    target.style.strokeDasharray = total + ' 0';
+    done = true;
+  } else {
+    requestAnimationFrame(check);
+  }
+}
+check();
 </script>
