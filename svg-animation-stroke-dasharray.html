@@ -25,8 +25,7 @@ svg {
 .bar {
   background-color: black;
   width: 0px;
-  height: 10px;
-  margin-bottom: 10px;
+  height: 16px;
 }
 </style>
 <div id="text"></div>
@@ -40,7 +39,7 @@ var total = Math.PI * 2 * 400;
 var progressTexts = [
   {threshold: 0, text: 'Press buttons.'},
   {threshold: 300, text: 'Close up the circle.'},
-  {threshold: total * 0.2, text: 'Keep going.'},
+  {threshold: total * 0.4, text: 'Keep going.'},
   {threshold: total * 0.5, text: 'Halfway!'},
   {threshold: total * 0.6, text: 'Go faster!'},
   {threshold: total * 0.85, text: 'Nearly there!'},
