@@ -1,0 +1,61 @@
+<style>
+body {
+  display: flex;
+}
+svg {
+  display: block;
+  width: 1000px;
+  height: 1000px;
+}
+#target {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  stroke-dasharray: 10 20;
+}
+#text {
+  font: 40px "Droid sans";
+  position: absolute;
+  left: 330px;
+  top: 480px;
+}
+.bar {
+  background-color: black;
+  width: 0px;
+  height: 10px;
+  margin-bottom: 10px;
+}
+</style>
+<div id="text">
+  Complete the circle!
+</div>
+<svg>
+  <circle id="target" r="400" cx="500" cy="500" stroke="black" fill="none" stroke-width="100"></circle>
+</svg>
+<div id="barContainer"></div>
+<script>
+onkeydown = e => {
+  var duration = 1000;
+
+  target.animate([
+    {offset: 0, easing: 'ease-in-out'},
+    {offset: 0.5, easing: 'ease-in-out', composite: 'add', 'stroke-dasharray': '100 0'},
+  ], duration);
+
+  var bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.animate([
+    {
+      offset: 0,
+      easing: 'ease-in-out'
+    }, {
+      offset: 0.5,
+      easing: 'ease-in-out',
+      width: '400px',
+      backgroundColor: `rgb(${Math.min(barContainer.childElementCount / 50, 1) * 255 | 0}, 0, 0)`,
+    },
+  ], duration).onfinish = () => {
+    bar.animate({height: 0, marginBottom: 0}, 200).onfinish = () => bar.remove();
+  };
+  barContainer.appendChild(bar);
+};
+</script>
