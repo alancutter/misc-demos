@@ -15,7 +15,7 @@ let createCoordinate = _ => {
   return `${createNumber(angle)} ${createNumber(angle - Math.PI / 2)}`;
 }
 let createPath = _ => `M ${createCoordinate()} ${range(20).map(_ => `L ${createCoordinate()}`).join(' ')} z`;
-let createKeyframes = _ => range(100).map(_ => ({svgD: createPath(), easing: 'linear'}));
+let createKeyframes = _ => range(100).map(_ => ({'svg-d': createPath(), easing: 'linear'}));
 
 target.animate(createKeyframes(), {duration: 20000, iterations: Infinity});
 </script>
