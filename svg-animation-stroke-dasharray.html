@@ -34,6 +34,10 @@ svg {
 </svg>
 <div id="barContainer"></div>
 <script>
+'use strict';
+
+// Context: https://codereview.chromium.org/1539433002
+
 var done = false;
 var total = Math.PI * 2 * 400;
 var progressTexts = [
