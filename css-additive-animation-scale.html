@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<style>
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.item:hover {
+  color: blue;
+}
+.item {
+  font-size: 40px;
+  margin: 40px;
+}
+</style>
+<div id="container"></div>
+<script>
+// Context: https://codereview.chromium.org/1637253002
+
+var activeItem = null;
+for (var i = 0; i < 50; i++) {
+  let item = document.createElement('div');
+  item.textContent = String.fromCodePoint((0x12300 + Math.random() * 26) | 0);
+  item.classList.add('item');
+  container.appendChild(item);
+  item.addEventListener('mouseover', () => {
+    activeItem = item;
+  });
+  item.addEventListener('mouseout', () => {
+    if (activeItem === item) {
+      activeItem = null;
+    }
+  });
+  item.animate([
+    {offset: 0, easing: 'ease-in-out'},
+    {offset: 0.5, easing: 'ease-in-out', scale: 1.1 + Math.random(), composite: 'add'},
+  ], {
+    duration: Math.random() * 1000 + 100,
+    direction: 'alternate',
+    iterations: Infinity,
+  });
+}
+requestAnimationFrame(function frame() {
+  requestAnimationFrame(frame);
+  if (!activeItem) {
+    return;
+  }
+  activeItem.scale = Math.min((activeItem.scale || 1) * 1.05, 4);
+  activeItem.style.scale = activeItem.scale;
+});
+</script>
