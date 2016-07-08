@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<style>
+#container {
+  width: 100px;
+  height: 100px;
+  transform-style: preserve-3d;
+  perspective: 300px;
+  translate: 300px 200px;
+}
+#target {
+  width: 100px;
+  height: 100px;
+  background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Chromium_11_Logo.svg/1000px-Chromium_11_Logo.svg.png");
+  background-size: cover;
+}
+button {
+  margin-top: 10px;
+}
+</style>
+
+<div id="container">
+  <div id="target"></div>
+</div>
+<script>
+var keyframess = [
+  ['none', 'rotateX(80deg)', 'rotateX(-80deg)', 'none'],
+  ['none', 'rotateY(80deg)', 'rotateY(-80deg)', 'none'],
+  ['none', 'rotateZ(80deg)', 'rotateZ(-80deg)', 'none'],
+  ['none', 'translateX(-100px)', 'translateX(100px)', 'none'],
+  ['none', 'translateY(-100px)', 'translateY(100px)', 'none'],
+  ['none', 'translateZ(-100px)', 'translateZ(100px)', 'none'],
+];
+var timing = {
+  duration: 3000,
+  iterations: Infinity,
+};
+for (let keyframes of keyframess) {
+  let button = document.createElement('button');
+  container.appendChild(button);
+  button.textContent = keyframes;
+  button.onclick = () => {
+    if (!keyframes.animation) {
+      keyframes.animation = target.animate({
+        transform: keyframes,
+        easing: 'ease-in-out',
+        composite: 'add',
+      }, timing);
+      button.style.color = 'green';
+    } else {
+      keyframes.animation.cancel();
+      keyframes.animation = null;
+      button.style.color = '';
+      return;
+    }
+  };
+}
+</script>
