@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<style>
+body {
+  overflow: hidden;
+}
+</style>
+
+<canvas id="canvas"></canvas>
+
+<script>
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight
+const context = canvas.getContext('2d');
+const targetSize = 400;
+const containerSize = 800;
+const height = 20;
+
+function calculateTargetBoundsA(leadingX, trailingX) {
+  const targetX1 = (containerSize - targetSize) / 2;
+  const targetX2 = (containerSize + targetSize) / 2;
+  const [x1, x2] = targetSize >= (trailingX - leadingX) ? [leadingX, trailingX] : [
+    Math.max(leadingX, targetX1) - Math.max(targetX2 - trailingX, 0),
+    Math.min(trailingX, targetX2) + Math.max(leadingX - targetX1, 0),
+  ];
+  return {
+    x: x1,
+    width: x2 - x1,
+  };
+}
+
+function calculateTargetBoundsB(leadingX, trailingX) {
+  let x = (containerSize - targetSize) / 2;
+  // Align right side to right inset if it's protruding into the target area.
+  x = Math.min(x, trailingX - targetSize);
+  // Align left side to left inset if it's protruding into the target area.
+  x = Math.max(x, leadingX);
+  // Clip width to right inset if it's protruding into the target area.
+  const width = Math.min(targetSize, trailingX - x);
+  return {x, width};
+}
+
+const cases = [
+  [0, 0],
+  [100, 100],
+  [250, 250],
+  [350, 350],
+
+  [100, 100],
+  [250, 100],
+  [350, 100],
+  [650, 100],
+
+  [100, 100],
+  [100, 250],
+  [100, 350],
+  [100, 650],
+];
+
+let y = 0;
+for (const [left, right] of cases) {
+  context.strokeStyle = 'black';
+  context.fillStyle = 'black';
+  context.strokeRect(0, y, containerSize, height);
+  context.strokeRect(containerSize / 2, y, 1, height);
+  context.fillRect(0, y, left, height);
+  context.fillRect(containerSize - right, y, right, height);
+  let {x, width} = calculateTargetBoundsA(left, containerSize - right);
+  context.fillStyle = 'blue';
+  context.fillRect(x, y, width, height / 2);
+  ({x, width} = calculateTargetBoundsB(left, containerSize - right));
+  context.fillStyle = 'lightblue';
+  context.fillRect(x, y + height / 2, width, height / 2);
+  y += height * 2;
+}
+</script>
